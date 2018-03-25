@@ -1,6 +1,6 @@
-# Project Title
+# Soap Eprints Server
 
-Web service interface for Eprints 3.x. 
+SOAP Web service interface for Eprints 3.x. http://www.eprints.org/uk/  and PHP client.
 
 ## Getting Started
 
