@@ -16,7 +16,6 @@ no utf8;
 
 
 
-
 sub getEprint
     {
 
@@ -64,21 +63,18 @@ undef @temp;
   my $i=0;
     while ($i<$arraySize)
     {
-    
-    
-    
-    
+
+
+
+
     $id=@{ $one_id }[$i];
 
     my $eprint = EPrints::DataObj::EPrint->new( $session, $id);
    # if (!defined $eprint) {return "not found ID"; exit(0)};
 
-
-
-
-
      undef $resources_list;
      undef @result_creators;
+     undef @result_titles;
      undef $elem1;
      undef $creators;
      undef @result_subjects;
@@ -87,7 +83,7 @@ undef @temp;
      undef @metadata;
 
     #get creators
-     
+
 
     my $creators = $eprint->get_value( "creators_name" );
 
@@ -139,7 +135,7 @@ undef @temp;
                        )->type("ArrayOf_SomeObject") ))
 
     ->type("SomeObject");
-
+#print Dumper ( @result_subjects);
 
 
     my $r=$session->get_repository->get_conf("base_url");
@@ -153,7 +149,61 @@ undef @temp;
 #    }
 
  #push(@myNames, 'Moe');
+
+
+
+     my $titles= $eprint->get_value( "title" );
+
+
+    if( defined $titles )
+		{
+
+			#foreach my $title ( @{$titles} )
+			foreach my $title ( @{$titles} )
+			{
+				next if !defined $title;
+
+				 #$elem3 = SOAP::Data->name('item')->type('string')->value(Dumper($title));
+				# print Dumper ($title->{'lang'});
+				 
+				  $elem3 = SOAP::Data->name('item')->attr({ lang => $title->{'lang'} })->type('string')->value($title->{'name'});
+                              push(@result_titles, $elem3);
+                              
+                        #      	 $elem2 = SOAP::Data->name('item' => 'test_tile')->type('string');
+                         #     push(@result_titles, $elem2);
+                              
+			}
+		}
+
+
+
+#$subjects_list = SOAP::Data
+#        ->name("SubjectsList" => \SOAP::Data->value(
+#
+#             SOAP::Data->name("someArray" => \SOAP::Data->value(
+#                  SOAP::Data->name("someArrayItem" => @result_subjects)
+#                            ->type("SomeObject"))
+#                       )->type("ArrayOf_SomeObject") ))
+#
+#    ->type("SomeObject");
+    
+  $titles_list = SOAP::Data
+        ->name("TitleList" => \SOAP::Data->value(
+
+              SOAP::Data->name("someArray" => \SOAP::Data->value(
+                  SOAP::Data->name("someArrayItem" => @result_titles)
+                            ->type("SomeObject"))
+                       )->type("ArrayOf_SomeObject") ))
+
+    ->type("SomeObject");
+
+
+#print Dumper (@result_titles);
+
+
      push (@metadata, SOAP::Data->name('title')->type('string')->value($eprint->get_value( "title" )));
+#     push (@metadata, SOAP::Data->name('title')->value($titles_list);
+
      push (@metadata, SOAP::Data->name('type')->type('string')->value($eprint->get_value( "type" )) );
      push (@metadata, SOAP::Data->name('abstract')->type('string')->value($eprint->get_value( "abstract" )) );
      push (@metadata, SOAP::Data->name('keywords')->type('string')->value($eprint->get_value( "keywords" )) );
@@ -161,6 +211,8 @@ undef @temp;
      push (@metadata, SOAP::Data->name('date')->type('string')->value($eprint->get_value( "date" )) );
      push (@metadata, SOAP::Data->name('creators')->value($creators_list) );
      push (@metadata, SOAP::Data->name('subjects')->value($subjects_list) );
+     push (@metadata, SOAP::Data->name('titles_list')->value($titles_list) );
+#     push (@metadata, SOAP::Data->name('titles2')->value(Dumper($titles)) );
      push (@metadata, SOAP::Data->name('relation')->type('anyURI')->value($r) );
 
 # $resources_list = SOAP::Data
@@ -172,17 +224,20 @@ undef @temp;
 #                       )->type("ArrayOf_SomeObject") ))
 #
 #    ->type("SomeObject");
-    
-    
-    
+
+
+
+#print Dumper (@metadata);
+
+
       $resources_list = SOAP::Data
         ->name("ResourcesList" => \SOAP::Data->value( @metadata ))
 
     ->type("SomeObject");
-    
-    
-    
-    
+
+
+
+
      $resource = SOAP::Data->value($resources_list)->type('ArrayOf_SomeObject');
 push(@resources, $resource);
 
@@ -193,9 +248,9 @@ undef $resource;
      }
   }
  }
- 
- 
- 
+
+
+
 
  $result=SOAP::Data->name('items')->type('ArrayOfItems')->value(\@resources);
 
@@ -295,11 +350,3 @@ SOAP::Transport::HTTP::CGI
 
 
 1;
-
-
-
-
-
-
-
-
