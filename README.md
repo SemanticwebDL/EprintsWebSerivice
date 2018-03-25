@@ -7,14 +7,11 @@ Web service interface for Eprints 3.x.
 Create directory soap in eprints3/cgi
 1. cd `eprints_install/cgi`
 2. mkdir `soap`
+3. copy MetaDataServ.cgi  SearchServ.cgi putEprint.cgi to `eprints_install/cgi/soap`
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+``` sudo apt-get install libsoap-lite-perl ```
 
 ### Installing
 
