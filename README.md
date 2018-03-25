@@ -13,75 +13,55 @@ Create directory soap in eprints3/cgi
 
 ``` sudo apt-get install libsoap-lite-perl ```
 
-### Installing
 
-A step by step series of examples that tell you have to get a development env running
+## How to use 
 
-Say what the step will be
 
-```
-Give the example
-```
+$search = new EpClient();
 
-And repeat
+/**
+ * search data, return list id
+ */
+/* search by title */
 
-```
-until finished
-```
+$search->fileds = array('title');
+$search->key = 'Google';
+$result_search = $search->search();
 
-End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
+echo "============ Search result ============== ";
+var_dump($result_search);
 
-Explain how to run the automated tests for this system
 
-### Break down into end to end tests
+/**
+ * get medatada by id item, return list metadata
+ */
+$search->ids = array('1');
+$result_metadata = $search->getMetadata();
 
-Explain what these tests test and why
+echo "============= Metadata result =========== ";
+var_dump($result_metadata);
+/**
+ * put metadata
+ */
 
-```
-Give an example
-```
+echo "============= Input items result =========== ";
+$search->title = 'Test soap client php 2';
+$search->abstract = 'testing soap client php';
+$search->creators_name = array(array('family' => 'test family1'), array('family' => 'test family2'));
+$search->date = '2012-09-30';
+$search->type = 'article';
+$search->url_file = 'http://eprints.zu.edu.ua/7799/1/%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D0%B2%D0%B8%D1%87.pdf';
+$result_put = $search->put();
+var_dump($result_put);
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Novytskiy Oleksandr ** - *Initial work* - [PurpleBooth](https://github.com/alexukua)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
 
